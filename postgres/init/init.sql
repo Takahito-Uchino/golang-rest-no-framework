@@ -4,6 +4,7 @@ CREATE TABLE todos (
     id SERIAL PRIMARY KEY,
     title VARCHAR(40) NOT NULL,
     content TEXT,
+    completed BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
     updated_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
