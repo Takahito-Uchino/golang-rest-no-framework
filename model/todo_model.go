@@ -52,16 +52,10 @@ func (t *TodoModel) GetTodos() (todos []Todo, err error) {
 
 func (t *TodoModel) CreateTodo(todo *Todo) (err error) {
 	query := "INSERT INTO todos (title, content, completed) VALUES ($1, $2, $3)"
-	result, err := t.db.Exec(query, todo.Title, todo.Content, todo.Completed)
+	_, err = t.db.Exec(query, todo.Title, todo.Content, todo.Completed)
 	if err != nil {
 		return err
 	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		return err
-	}
-	todo.Id = int(id)
 
 	return nil
 }
@@ -82,4 +76,16 @@ func (t *TodoModel) DeleteTodo(id int) (err error) {
 		return err
 	}
 	return nil
+}
+
+func (t *TodoModel) GetTodo(id int) (todo Todo, err error) {
+	query := "SELECT id, title, content, completed FROM todos WHERE id = $1"
+	row := t.db.QueryRow(query, id)
+
+	err = row.Scan(&todo.Id, &todo.Title, &todo.Content, &todo.Completed)
+	if err != nil {
+		return
+	}
+
+	return todo, nil
 }
